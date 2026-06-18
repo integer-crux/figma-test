@@ -5,7 +5,7 @@ import { join, dirname } from 'path';
 
 register(StyleDictionary);
 
-const TOKENS_FILE = 'tokens/default-token.json';
+const TOKENS_FILE = 'tokens/default-tokens.json';
 const SETS_DIR = 'tokens/sets';
 
 // 1. Read combined JSON and split into per-set files
