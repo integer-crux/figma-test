@@ -575,6 +575,14 @@
         "$type": "fontSizes",
         "$value": "{fontSizes.body} * 0.65"
       }
+    },
+    "unique_color": {
+      "$type": "color",
+      "$value": "#e08484"
+    },
+    "unique_yellow": {
+      "$type": "color",
+      "$value": "#f9f27e"
     }
   },
   "light": {
