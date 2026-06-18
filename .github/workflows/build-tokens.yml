@@ -4,7 +4,8 @@ on:
   push:
     paths:
       - 'tokens/**'
-
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
