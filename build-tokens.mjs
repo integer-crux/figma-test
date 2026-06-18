@@ -1,37 +1,80 @@
 import { register } from '@tokens-studio/sd-transforms';
 import StyleDictionary from 'style-dictionary';
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from 'fs';
+import { join, dirname } from 'path';
 
-// Register Token Studio transforms (handles math, references, composite types)
 register(StyleDictionary);
 
-// 1. Read the combined tokens.json and split into per-set files
-const allTokens = JSON.parse(readFileSync('tokens/default-token.json', 'utf-8'));
-mkdirSync('tokens/sets', { recursive: true });
+const TOKENS_FILE = 'tokens/default-token.json';
+const SETS_DIR = 'tokens/sets';
 
-for (const setName of ['core', 'light', 'dark', 'theme']) {
-    writeFileSync(
-        `tokens/sets/${setName}.json`,
-        JSON.stringify(allTokens[setName], null, 2),
-    );
+// 1. Read combined JSON and split into per-set files
+const allTokens = JSON.parse(readFileSync(TOKENS_FILE, 'utf-8'));
+const tokenSetNames = allTokens['$metadata']?.tokenSetOrder
+    ?? Object.keys(allTokens).filter((k) => !k.startsWith('$'));
+
+console.log('📦 Token sets:', tokenSetNames);
+
+mkdirSync(SETS_DIR, { recursive: true });
+const validSets = [];
+
+for (const setName of tokenSetNames) {
+    const data = allTokens[setName];
+    if (!data || Object.keys(data).length === 0) {
+        console.warn(`⚠️  Set "${setName}" is empty, skipping`);
+        continue;
+    }
+    const filePath = join(SETS_DIR, `${setName}.json`);
+    mkdirSync(dirname(filePath), { recursive: true });
+    writeFileSync(filePath, JSON.stringify(data, null, 2));
+    validSets.push(setName);
 }
 
-// 2. Shared SD config factory
-function buildTheme(themeName, tokenSets) {
+// 2. Classify sets
+function classifySets(setNames) {
+    const core = [];
+    const light = [];
+    const dark = [];
+
+    for (const name of setNames) {
+        const lower = name.toLowerCase();
+        if (lower.includes('dark')) dark.push(name);
+        else if (lower.includes('light')) light.push(name);
+        else core.push(name);
+    }
+
+    return { core, light, dark };
+}
+
+const classified = classifySets(validSets);
+console.log('🔀 Classification:', classified);
+
+// 3. Build theme CSS
+async function buildTheme(themeName, setNames) {
+    const sources = setNames
+        .map((s) => join(SETS_DIR, `${s}.json`))
+        .filter((p) => existsSync(p));
+
+    if (sources.length === 0) {
+        console.warn(`⚠️  No sources for "${themeName}", skipping`);
+        return;
+    }
+
     const selector = themeName === 'light' ? ':root' : '[data-theme="dark"]';
 
     const sd = new StyleDictionary({
-        source: tokenSets.map((s) => `tokens/sets/${s}.json`),
+        source: sources,
         preprocessors: ['tokens-studio'],
-        expand: { typesMap: true },
+        log: {
+            warnings: 'warn',
+            errors: { brokenReferences: 'console' },
+        },
         platforms: {
             css: {
                 transformGroup: 'tokens-studio',
                 prefix: 'crux',
                 buildPath: 'src/styles/generated/',
-                options: {
-                    selector,
-                },
+                options: { selector, outputReferences: true },
                 files: [
                     {
                         destination: `tokens-${themeName}.css`,
@@ -45,6 +88,16 @@ function buildTheme(themeName, tokenSets) {
     return sd.buildAllPlatforms();
 }
 
-// 3. Build both themes
-await buildTheme('light', ['core', 'light', 'theme']);
-await buildTheme('dark', ['core', 'dark', 'theme']);
+// 4. Build
+const lightSets = [...classified.core, ...classified.light];
+const darkSets = [...classified.core, ...classified.dark];
+
+console.log('🎨 Light sources:', lightSets);
+console.log('🌙 Dark sources:', darkSets);
+
+await buildTheme('light', lightSets);
+await buildTheme('dark', darkSets);
+
+console.log('✅ Done');
+console.log('   → src/styles/generated/tokens-light.css');
+console.log('   → src/styles/generated/tokens-dark.css');
