@@ -579,6 +579,10 @@
     "unique_color": {
       "$type": "color",
       "$value": "#e08484"
+    },
+    "unique_yellow": {
+      "$type": "color",
+      "$value": "#f9f27e"
     }
   },
   "light": {
