@@ -575,6 +575,110 @@
         "$type": "fontSizes",
         "$value": "{fontSizes.body} * 0.65"
       }
+    },
+    "Black-12": {
+      "$type": "color",
+      "$value": "#111111"
+    },
+    "Black-11": {
+      "$type": "color",
+      "$value": "#1a1a1a"
+    },
+    "Black-10": {
+      "$type": "color",
+      "$value": "#202020"
+    },
+    "Black-9": {
+      "$type": "color",
+      "$value": "#2a2a2a"
+    },
+    "Black-8": {
+      "$type": "color",
+      "$value": "#525252"
+    },
+    "Black-7": {
+      "$type": "color",
+      "$value": "#545454"
+    },
+    "Black-6": {
+      "$type": "color",
+      "$value": "#838383"
+    },
+    "Black-5": {
+      "$type": "color",
+      "$value": "#c0c0c0"
+    },
+    "Black-4": {
+      "$type": "color",
+      "$value": "#d5d5d5"
+    },
+    "Black-3": {
+      "$type": "color",
+      "$value": "#e5e5ec"
+    },
+    "Black-2": {
+      "$type": "color",
+      "$value": "#f7f7fb"
+    },
+    "Black-1": {
+      "$type": "color",
+      "$value": "#ffffff"
+    },
+    "Star-yellow": {
+      "$type": "color",
+      "$value": "#f0d539"
+    },
+    "Red-Warning": {
+      "$type": "color",
+      "$value": "#dc3644"
+    },
+    "Purple-tutor": {
+      "$type": "color",
+      "$value": "#ab2dff"
+    },
+    "Green-complete": {
+      "$type": "color",
+      "$value": "#1ca673"
+    },
+    "Primary-6": {
+      "$type": "color",
+      "$value": "#1e3060"
+    },
+    "Primary-5": {
+      "$type": "color",
+      "$value": "#2556f5"
+    },
+    "Primary-4": {
+      "$type": "color",
+      "$value": "#3270ff"
+    },
+    "Primary-3": {
+      "$type": "color",
+      "$value": "#5997ff"
+    },
+    "Primary-2": {
+      "$type": "color",
+      "$value": "#8ebcff"
+    },
+    "Primary-1": {
+      "$type": "color",
+      "$value": "#d9e7ff"
+    },
+    "Primary-0": {
+      "$type": "color",
+      "$value": "#eef5ff"
+    },
+    "Secondary-3": {
+      "$type": "color",
+      "$value": "#ff6e2d"
+    },
+    "Secondary-2": {
+      "$type": "color",
+      "$value": "#ff8e52"
+    },
+    "Secondary-1": {
+      "$type": "color",
+      "$value": "#ffab721a"
     }
   },
   "light": {
